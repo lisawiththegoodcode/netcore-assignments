@@ -15,7 +15,7 @@ namespace WebApi.Models
         [Required]
         public string Title { get; set; }
 
-        public string Estimate { get; set; }
+        public decimal Estimate { get; set; }
 
         public string Description { get; set; }
 

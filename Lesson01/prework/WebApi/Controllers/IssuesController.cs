@@ -50,9 +50,10 @@ namespace WebApi.Controllers
                 await repository.SaveIssue(issue);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                ModelState.AddModelError("", "Error while saving");
+                Console.WriteLine("in the catch statement");
+                ModelState.AddModelError("", $"Error while saving: {e}");
                 return View();
             }
         }

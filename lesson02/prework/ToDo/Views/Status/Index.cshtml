@@ -1,27 +1,53 @@
-﻿@model IEnumerable<ToDoApp.Models.ToDo>
+﻿@model IEnumerable<ToDoApp.Models.Status>
 
 @{
     ViewData["Title"] = "Index";
 }
 
+
+
 <h2>Status</h2>
+
+<h4>
+    Statuses:
+</h4>
+
 
 <p>
     <a asp-action="Create">Create New Status</a>
 </p>
 
-<p>
-    Current Statuses:
-</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Value)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Value)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
-<ul>
-    @foreach (var item in Model)
-    {
-        <li>
-            @Html.DisplayFor(modelItem => item.Status)
-        </li>
-    }
-</ul>
-
-
+<div>
+    <a asp-controller="ToDo" asp-action="Index">Back to ToDos</a>
+</div>
 

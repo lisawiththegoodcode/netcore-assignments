@@ -12,10 +12,22 @@ namespace ToDoApp.Controllers
 {
     public class StatusController : Controller
     {
-        // GET: /<controller>/
-        public IActionResult Index()
+        // GET: Status
+        public ActionResult Index()
         {
-            return View(Repository.ToDos);
+            return View(Repository.Statuses.Values);
+        }
+
+        // GET: Status/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // GET: Status/Edit
+        public ActionResult Edit(int id)
+        {
+            return View((Repository.Statuses.FirstOrDefault(x => x.Key == id).Value));
         }
     }
 }

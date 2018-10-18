@@ -6,15 +6,14 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace TagHelpers
 {
-    class InputTagHelper : TagHelper
+    public class InputTagHelper : TagHelper
     {
+        [HtmlAttributeName("autocomplete")]
         public string AutocompleteStatus { get; set; }
 
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-
-
             if (AutocompleteStatus == "off" || AutocompleteStatus == "false" || AutocompleteStatus == "disabled")
             {
                 output.Attributes.SetAttribute("autocomplete", "off");
@@ -24,7 +23,6 @@ namespace TagHelpers
             {
                 output.Attributes.SetAttribute("autocomplete", "on");
             }
-
         }
 
     }

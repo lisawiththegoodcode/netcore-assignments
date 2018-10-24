@@ -1,11 +1,11 @@
-﻿<div id="socialMedia">
-    <a href="https://www.facebook.com/">
-        <i class="fab fa-facebook-square"></i>
-    </a>
-    <a href="https://www.linkedin.com/">
-        <i class="fab fa-linkedin"></i>
-    </a>
-    <a href="https://www.twitter.com/">
-        <i class="fab fa-twitter-square"></i>
-    </a>
+﻿@model IEnumerable<ToDoApp.Models.SocialMediaModel>
+
+
+<div id="socialMedia">
+    @foreach (var item in Model)
+    {
+        <a href="@item.Href">
+            <i class="@item.IconClass"></i>
+        </a>
+    }
 </div>

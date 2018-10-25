@@ -15,7 +15,7 @@ namespace ToDoApp.Controllers
             {
                 new SocialMediaModel { Href = "https://www.twitter.com/", IconClass = "fab fa-twitter-square"},
                 new SocialMediaModel { Href = "https://www.facebook.com/", IconClass = "fab fa-facebook-square"},
-                new SocialMediaModel { Href = "https://www.linkedin.com/", IconClass = "fab fa-linkedin-square"}
+                new SocialMediaModel { Href = "https://www.linkedin.com/", IconClass = "fab fa-linkedin"}
 
             };
             return View(SocialMediaCollection);

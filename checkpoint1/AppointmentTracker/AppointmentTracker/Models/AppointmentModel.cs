@@ -7,5 +7,11 @@ namespace AppointmentTracker.Models
 {
     public class AppointmentModel
     {
+        public int Id { get; set; }
+        public DateTime AppointmentTime { get; set; }
+        public int CustomerId { get; set; }
+        public int ServiceProviderId { get; set; }
+        public string Service { get; set; }
+
     }
 }

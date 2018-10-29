@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AppointmentTracker.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +13,7 @@ namespace AppointmentTracker.Controllers
         // GET: Customer
         public ActionResult Index()
         {
-            return View();
+            return View(CustomerRepository.Customers);
         }
 
         // GET: Customer/Details/5

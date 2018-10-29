@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AppointmentTracker.Models;
 using AppointmentTracker.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,33 +11,32 @@ namespace AppointmentTracker.Controllers
 {
     public class CustomerController : Controller
     {
-        // GET: Customer
+        // GET: ServiceProvider
         public ActionResult Index()
         {
             return View(CustomerRepository.Customers);
         }
 
-        // GET: Customer/Details/5
+        // GET: ServiceProvider/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            return View(CustomerRepository.Read(id));
         }
 
-        // GET: Customer/Create
+        // GET: ServiceProvider/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Customer/Create
+        // POST: ServiceProvider/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(CustomerModel customer)
         {
             try
             {
-                // TODO: Add insert logic here
-
+                CustomerRepository.Create(customer);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -54,12 +54,11 @@ namespace AppointmentTracker.Controllers
         // POST: Customer/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, CustomerModel customer)
         {
             try
             {
-                // TODO: Add update logic here
-
+                CustomerRepository.Update(id, customer);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -68,21 +67,20 @@ namespace AppointmentTracker.Controllers
             }
         }
 
-        // GET: Customer/Delete/5
+        // GET: ServiceProvider/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            return View(CustomerRepository.Read(id));
         }
 
-        // POST: Customer/Delete/5
+        // POST: ServiceProvider/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, CustomerModel customerProvider)
         {
             try
             {
-                // TODO: Add delete logic here
-
+                CustomerRepository.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

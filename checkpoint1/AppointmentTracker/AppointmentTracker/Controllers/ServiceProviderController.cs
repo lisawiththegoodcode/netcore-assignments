@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AppointmentTracker.Models;
+using AppointmentTracker.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,13 +14,13 @@ namespace AppointmentTracker.Controllers
         // GET: ServiceProvider
         public ActionResult Index()
         {
-            return View();
+            return View(ServiceProviderRepository.Providers);
         }
 
         // GET: ServiceProvider/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            return View(ServiceProviderRepository.Read(id));
         }
 
         // GET: ServiceProvider/Create
@@ -30,12 +32,11 @@ namespace AppointmentTracker.Controllers
         // POST: ServiceProvider/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(ServiceProviderModel serviceProvider)
         {
             try
             {
-                // TODO: Add insert logic here
-
+                ServiceProviderRepository.Create(serviceProvider);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -44,21 +45,20 @@ namespace AppointmentTracker.Controllers
             }
         }
 
-        // GET: ServiceProvider/Edit/5
+        // GET: Customer/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: ServiceProvider/Edit/5
+        // POST: Customer/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, ServiceProviderModel serviceProvider)
         {
             try
             {
-                // TODO: Add update logic here
-
+                ServiceProviderRepository.Update(id, serviceProvider);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -70,18 +70,17 @@ namespace AppointmentTracker.Controllers
         // GET: ServiceProvider/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            return View(ServiceProviderRepository.Read(id));
         }
 
         // POST: ServiceProvider/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, ServiceProviderModel serviceProvider)
         {
             try
             {
-                // TODO: Add delete logic here
-
+                ServiceProviderRepository.Delete(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

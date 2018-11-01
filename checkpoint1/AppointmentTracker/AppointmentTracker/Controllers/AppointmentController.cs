@@ -41,8 +41,7 @@ namespace AppointmentTracker.Controllers
             }
             catch(Exception e)
             {
-                //TODO: figure out bet way to display error message
-                Console.WriteLine(e);
+                ModelState.AddModelError("", e.Message);
                 return View();
             }
         }
@@ -50,7 +49,7 @@ namespace AppointmentTracker.Controllers
         // GET: Appointment/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            return View(AppointmentRepository.Read(id));
         }
 
         // POST: Appointment/Edit/5
@@ -63,9 +62,10 @@ namespace AppointmentTracker.Controllers
                 AppointmentRepository.Update(id, Appt);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                ModelState.AddModelError("", e.Message);
+                return View(AppointmentRepository.Read(id));
             }
         }
 

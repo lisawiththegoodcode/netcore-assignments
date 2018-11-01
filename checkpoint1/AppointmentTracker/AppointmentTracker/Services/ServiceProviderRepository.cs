@@ -48,5 +48,14 @@ namespace AppointmentTracker.Services
             var index = _providers.FindIndex(x => x.Id == id);
             _providers.RemoveAt(index);
         }
+
+        //Provider Schedule List Method
+        public static List<AppointmentModel> GetAppointmentsForProvider(int providerID)
+        {
+            return AppointmentRepository.Appointments
+                .Where(appt => appt.Provider.Id == providerID)
+                .OrderBy(appt => appt.AppointmentTime)
+                .ToList();
+        }
     }
 }

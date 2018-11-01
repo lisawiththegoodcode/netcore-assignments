@@ -48,7 +48,7 @@ namespace AppointmentTracker.Controllers
         // GET: Customer/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            return View(ServiceProviderRepository.Read(id));
         }
 
         // POST: Customer/Edit/5

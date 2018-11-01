@@ -18,9 +18,7 @@ namespace AppointmentTracker.Services
             {
                 Id = 1,
                 AppointmentTime = DateTime.Today,
-                CustomerId = 1,
                 Client = CustomerRepository.Read(1),
-                ServiceProviderId = 2,
                 Provider = ServiceProviderRepository.Read(2),
                 Service = "Haircut"
             },
@@ -28,9 +26,7 @@ namespace AppointmentTracker.Services
             {
                 Id = 2,
                 AppointmentTime = DateTime.Today.AddDays(4),
-                CustomerId = 1,
                 Client = CustomerRepository.Read(1),
-                ServiceProviderId = 1,
                 Provider = ServiceProviderRepository.Read(1),
                 Service = "Nails"
             },
@@ -38,9 +34,7 @@ namespace AppointmentTracker.Services
             {
                 Id = 3,
                 AppointmentTime = DateTime.Now,
-                CustomerId = 2,
                 Client = CustomerRepository.Read(2),
-                ServiceProviderId = 1,
                 Provider = ServiceProviderRepository.Read(1),
                 Service = "Acupuncture"
             },
@@ -51,12 +45,20 @@ namespace AppointmentTracker.Services
         //Create Method
         public static void Create(AppointmentModel appointment)
         {
-            if (!IsAppointmentAvailable(appointment))
+
+            if (!IsProviderAvailable(appointment))
             {
                 throw new Exception("The selected service provider is not available for an appointment at this time.");
             }
 
+            if (!IsClientAvailable(appointment))
+            {
+                throw new Exception("The selected customer already has an appointment booked at this time.");
+            }
+
             appointment.Id = Interlocked.Increment(ref appointmentCounter);
+            appointment.Provider = ServiceProviderRepository.Read(appointment.Provider.Id);
+            appointment.Client = CustomerRepository.Read(appointment.Client.Id);
             _appointments.Add(appointment);
         }
 
@@ -69,9 +71,26 @@ namespace AppointmentTracker.Services
         //Update Method
         public static void Update(int id, AppointmentModel appointment)
         {
+            //NOTE: I put the remove before the conditional check so that it would only check appts outside of the current on
+            //ISSUE: I am having an issue when you try again to submit after getting an error         
+            //TODO: figure out why this is not working when you are trying again after an error has occured
+
             var index = _appointments.FindIndex(x => x.Id == id);
             _appointments.RemoveAt(index);
+
+            if (!IsProviderAvailable(appointment))
+            {
+                throw new Exception("The selected service provider is not available for an appointment at this time.");
+            }
+
+            if (!IsClientAvailable(appointment))
+            {
+                throw new Exception("The selected customer already has an appointment booked at this time.");
+            }
+
             appointment.Id = id;
+            appointment.Provider = ServiceProviderRepository.Read(appointment.Provider.Id);
+            appointment.Client = CustomerRepository.Read(appointment.Client.Id);
             _appointments.Insert(index, appointment);
         }
 
@@ -82,8 +101,8 @@ namespace AppointmentTracker.Services
             _appointments.RemoveAt(index);
         }
 
-        //Appointment Checker Method
-        public static bool IsAppointmentAvailable(AppointmentModel proposedAppt)
+        //Appointment Checker Methods
+        public static bool IsProviderAvailable(AppointmentModel proposedAppt)
         {
             // loop thru all appointments to check if the proposed service provider is already booked for proposed start time
 
@@ -92,7 +111,7 @@ namespace AppointmentTracker.Services
 
             foreach (var appt in _appointments)
             {
-                if (appt.AppointmentTime == proposedAppt.AppointmentTime && appt.ServiceProviderId == proposedAppt.ServiceProviderId)
+                if (appt.AppointmentTime == proposedAppt.AppointmentTime && appt.Provider.Id == proposedAppt.Provider.Id)
                 {
                     return false;
                 }
@@ -100,5 +119,18 @@ namespace AppointmentTracker.Services
             return true;
         }
 
+        public static bool IsClientAvailable(AppointmentModel proposedAppt)
+        {
+            // loop thru all appointments to check if the client already has an appt booked for proposed start time
+
+            foreach (var appt in _appointments)
+            {
+                if (appt.AppointmentTime == proposedAppt.AppointmentTime && appt.Client.Id == proposedAppt.Client.Id)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

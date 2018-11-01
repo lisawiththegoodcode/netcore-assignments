@@ -10,17 +10,16 @@ namespace AppointmentTracker.Models
     {
         public int Id { get; set; }
 
+        [Required]
         public DateTime AppointmentTime { get; set; }
 
-        public int CustomerId { get; set; }
-        [UIHint("Client)")]
+        [UIHint("Client")]
         public CustomerModel Client { get; set; }
 
-        public int ServiceProviderId { get; set; }
         [UIHint("Provider")]
         public ServiceProviderModel Provider { get; set; }
 
+        [Required]
         public string Service { get; set; }
-
     }
 }

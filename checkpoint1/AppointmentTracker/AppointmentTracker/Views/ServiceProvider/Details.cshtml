@@ -1,4 +1,5 @@
 ﻿@model AppointmentTracker.Models.ServiceProviderModel
+@using AppointmentTracker.Services;
 
 @{
     ViewData["Title"] = "Details";
@@ -21,14 +22,40 @@
         <dd>
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dd>
-            @*@foreach (var item in collection)
-            {
-                //this is an idea for getting the service providers 
-                //get appts for provider in service provider repository
-            }*@
-        </dd>
     </dl>
+    <br />
+    <h4><strong>@Html.DisplayFor(model => model.Name)'s Appointments</strong></h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Date
+                </th>
+                <th>
+                    Client
+                </th>
+                <th>
+                    Service
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ServiceProviderRepository.GetAppointmentsForProvider(Model.Id))
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AppointmentTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Client)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Service)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 <div>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |

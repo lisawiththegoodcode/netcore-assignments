@@ -1,0 +1,7 @@
+﻿@using AppointmentTracker.Services
+@model AppointmentTracker.Models.ServiceProviderModel
+@{
+    var items = ServiceProviderRepository.Providers.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+}
+
+<select asp-for="Id" asp-items="@items"></select>

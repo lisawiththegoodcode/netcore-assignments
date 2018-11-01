@@ -40,13 +40,13 @@
                 @Html.DisplayFor(modelItem => item.AppointmentTime)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Client.Name)
+                @Html.DisplayFor(modelItem => item.Client)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Service)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Provider.Name)
+                @Html.DisplayFor(modelItem => item.Provider)
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |

@@ -23,8 +23,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="Client" class="control-label"></label>
-                <input asp-for="Client.Name" class="form-control" />
-                <span asp-validation-for="Client.Name" class="text-danger"></span>
+                @Html.EditorFor(x => x.Client)
+                <span asp-validation-for="Client" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Service" class="control-label"></label>
@@ -33,8 +33,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="Provider" class="control-label"></label>
-                <input asp-for="Provider.Name" class="form-control" />
-                <span asp-validation-for="Provider.Name" class="text-danger"></span>
+                @Html.EditorFor(x => x.Provider)
+                <span asp-validation-for="Provider" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />

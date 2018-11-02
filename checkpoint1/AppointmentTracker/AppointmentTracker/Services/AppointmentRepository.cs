@@ -71,13 +71,6 @@ namespace AppointmentTracker.Services
         //Update Method
         public static void Update(int id, AppointmentModel appointment)
         {
-            //NOTE: I put the remove before the conditional check so that it would only check appts outside of the current on
-            //ISSUE: I am having an issue when you try again to submit after getting an error         
-            //TODO: figure out why this is not working when you are trying again after an error has occured
-
-            var index = _appointments.FindIndex(x => x.Id == id);
-            _appointments.RemoveAt(index);
-
             if (!IsProviderAvailable(appointment))
             {
                 throw new Exception("The selected service provider is not available for an appointment at this time.");
@@ -88,6 +81,8 @@ namespace AppointmentTracker.Services
                 throw new Exception("The selected customer already has an appointment booked at this time.");
             }
 
+            var index = _appointments.FindIndex(x => x.Id == id);
+            _appointments.RemoveAt(index);
             appointment.Id = id;
             appointment.Provider = ServiceProviderRepository.Read(appointment.Provider.Id);
             appointment.Client = CustomerRepository.Read(appointment.Client.Id);
@@ -111,7 +106,7 @@ namespace AppointmentTracker.Services
 
             foreach (var appt in _appointments)
             {
-                if (appt.AppointmentTime == proposedAppt.AppointmentTime && appt.Provider.Id == proposedAppt.Provider.Id)
+                if (appt.AppointmentTime == proposedAppt.AppointmentTime && appt.Provider.Id == proposedAppt.Provider.Id && appt.Id != proposedAppt.Id)
                 {
                     return false;
                 }
@@ -125,7 +120,7 @@ namespace AppointmentTracker.Services
 
             foreach (var appt in _appointments)
             {
-                if (appt.AppointmentTime == proposedAppt.AppointmentTime && appt.Client.Id == proposedAppt.Client.Id)
+                if (appt.AppointmentTime == proposedAppt.AppointmentTime && appt.Client.Id == proposedAppt.Client.Id && appt.Id != proposedAppt.Id)
                 {
                     return false;
                 }

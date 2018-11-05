@@ -76,13 +76,7 @@ namespace AppointmentTracker.Tests
             var result = AppointmentRepository.Appointments.FirstOrDefault(x => x.Id == testAppointment.Id);
 
             //ASSERT
-            //testing that the content of the objects are equal, not just the object
-            Assert.Equal(testAppointment.Client.Name, result.Client.Name);
-            Assert.Equal(testAppointment.Client.Id, result.Client.Id);
-            Assert.Equal(testAppointment.AppointmentTime, result.AppointmentTime);
-            Assert.Equal(testAppointment.Provider.Name, result.Provider.Name);
-            Assert.Equal(testAppointment.Provider.Id, result.Provider.Id);
-            Assert.Equal(testAppointment.Service, result.Service);
+            Assert.Equal(testAppointment, result);
         }
     }
 }

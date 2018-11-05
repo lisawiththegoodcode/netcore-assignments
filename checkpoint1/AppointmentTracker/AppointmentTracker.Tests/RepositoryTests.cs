@@ -14,8 +14,8 @@ namespace AppointmentTracker.Tests
         public void CreateMethod_ShouldAddNewCustomertoCustomerRepository()
         {
             //ASSEMBLE
-            //is this statement necessary? why?
-            //var testRepo = new CustomerRepository();
+            //do not need to instantiate the repository because all the methods are static
+            //var testCustomerRepo = new CustomerRepository();
             var testCustomer = new CustomerModel
             {
                 Id = 5,
@@ -24,31 +24,36 @@ namespace AppointmentTracker.Tests
 
             //ACT
             CustomerRepository.Create(testCustomer);
-            var result = CustomerRepository.Customers.FirstOrDefault(x => x.Id == testCustomer.Id);
 
             //ASSERT
-            Assert.Contains(result, CustomerRepository.Customers);
-            Assert.Equal(testCustomer, result);
+            Assert.Contains(testCustomer, CustomerRepository.Customers);
         }
-
+        
         //ServiceProvider Repository Test
         [Fact]
         public void ReadMethod_ShouldReadProviderFromProviderRepository()
         {
             //ASSEMBLE
-            //var testId = ServiceProviderRepository.Providers.FirstOrDefault().Id;
-
-            var testId = 1;
+            int testId = 1;
 
             //ACT
-            //ServiceProviderRepository.Read(testId);
-            //var result = ServiceProviderRepository.Providers.FirstOrDefault(x => x.Id == testId);
-
             var result = ServiceProviderRepository.Read(testId);
 
             //ASSERT
-            Assert.Contains(result, ServiceProviderRepository.Providers);
-            Assert.True(testId == result.Id);
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void ReadMethod_ReturnsNullWhenItemNotFound()
+        {
+            //ASSEMBLE
+            int testId = 100;
+
+            //ACT
+            var result = ServiceProviderRepository.Read(testId);
+
+            //ASSERT
+            Assert.Null(result);
         }
 
 
@@ -60,7 +65,7 @@ namespace AppointmentTracker.Tests
             var testAppointment = new AppointmentModel
             {
                 Id = 1,
-                AppointmentTime = DateTime.Today,
+                AppointmentTime = new DateTime(2018, 10, 10, 08, 00, 00),
                 Client = new CustomerModel { Id = 5, Name = "Bob1" },
                 Provider = new ServiceProviderModel { Id = 5, Name = "Bob2"},
                 Service = "Test Haircut"
@@ -71,10 +76,13 @@ namespace AppointmentTracker.Tests
             var result = AppointmentRepository.Appointments.FirstOrDefault(x => x.Id == testAppointment.Id);
 
             //ASSERT
-            Assert.Contains(result, AppointmentRepository.Appointments);
-            Assert.Equal(testAppointment, result);
-
-                
+            //testing that the content of the objects are equal, not just the object
+            Assert.Equal(testAppointment.Client.Name, result.Client.Name);
+            Assert.Equal(testAppointment.Client.Id, result.Client.Id);
+            Assert.Equal(testAppointment.AppointmentTime, result.AppointmentTime);
+            Assert.Equal(testAppointment.Provider.Name, result.Provider.Name);
+            Assert.Equal(testAppointment.Provider.Id, result.Provider.Id);
+            Assert.Equal(testAppointment.Service, result.Service);
         }
     }
 }

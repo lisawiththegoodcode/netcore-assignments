@@ -1,10 +1,30 @@
 ﻿using System;
+using Xunit;
+using AppointmentTracker.Services;
+using AppointmentTracker.Models;
+using AppointmentTracker.Controllers;
+using System.Linq;
 using System.Collections.Generic;
-using System.Text;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AppointmentTracker.Tests
 {
-    class Class1
+    //Customer Controller Test
+    public class ControllerTests
     {
+        [Fact]
+        public void CustomerIndex_ReturnsAViewResult_WithAListOfCustomers()
+        {
+            //assert
+            var testCustomerController = new CustomerController();
+
+            //act
+            var result = testCustomerController.Index();
+
+            //assert
+            Assert.IsType<ViewResult>(result);
+
+        }
+
     }
 }

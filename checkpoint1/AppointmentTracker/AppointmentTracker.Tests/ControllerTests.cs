@@ -13,7 +13,7 @@ namespace AppointmentTracker.Tests
     public class ControllerTests
     {
         [Fact]
-        public void CustomerIndex_ReturnsAViewResult_WithAListOfCustomers()
+        public void CustomerIndex_ReturnsAViewResult()
         {
             //assert
             var testCustomerController = new CustomerController();
@@ -23,6 +23,12 @@ namespace AppointmentTracker.Tests
 
             //assert
             Assert.IsType<ViewResult>(result);
+
+        }
+
+        [Fact]
+        public void ProviderCreate
+        {
 
         }
 

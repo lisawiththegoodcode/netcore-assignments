@@ -11,16 +11,24 @@ namespace AppointmentTracker.Controllers
 {
     public class AppointmentController : Controller
     {
+        //private readonly irepository _spaRepository;
+        public AppointmentController()//need to pass in IRepository SpaRepository
+        {
+            //_spaRepository = SpaRepository;
+        }
+
         // GET: Appointment
         public ActionResult Index()
         {
             return View(AppointmentRepository.Appointments);
+            //_spaRepository.Appointments;
         }
 
         // GET: Appointment/Details/5
         public ActionResult Details(int id)
         {
             return View(AppointmentRepository.Read(id));
+            //_spaRepository.GetAppointment(id);
         }
 
         // GET: Appointment/Create

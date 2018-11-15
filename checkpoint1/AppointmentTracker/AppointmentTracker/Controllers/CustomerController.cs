@@ -11,6 +11,7 @@ namespace AppointmentTracker.Controllers
 {
     public class CustomerController : Controller
     {
+        //add ctor
         // GET: ServiceProvider
         public ActionResult Index()
         {

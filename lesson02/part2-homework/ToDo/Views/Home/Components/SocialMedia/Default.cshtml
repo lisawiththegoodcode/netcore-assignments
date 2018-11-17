@@ -1,0 +1,11 @@
+﻿@model IEnumerable<ToDoApp.Models.SocialMediaModel>
+
+
+<div id="socialMedia">
+    @foreach (var item in Model)
+    {
+        <a href="@item.Href">
+            <i class="@item.IconClass"></i>
+        </a>
+    }
+</div>

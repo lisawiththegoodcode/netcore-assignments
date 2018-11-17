@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ToDoApp.Middlewares;
 
 namespace ToDoApp
 {
@@ -33,6 +34,18 @@ namespace ToDoApp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.Use(async (context, next) =>
+            {
+                var sw = new System.Diagnostics.Stopwatch();
+                sw.Start();
+                await next.Invoke();
+                sw.Stop();
+                System.Console.WriteLine("app.Use took this much time to run: " + sw.Elapsed.Milliseconds);
+
+                //applies to every request that comes in, good for logging, security, authorization
+                //aka cross cutting concerns 
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -44,6 +57,8 @@ namespace ToDoApp
 
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+            app.UseMiddleware<UnwrapExceptionMiddleware>();
 
             app.UseMvc(routes =>
             {

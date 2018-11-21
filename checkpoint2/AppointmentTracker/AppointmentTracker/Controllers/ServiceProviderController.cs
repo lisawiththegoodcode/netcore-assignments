@@ -6,21 +6,31 @@ using AppointmentTracker.Models;
 using AppointmentTracker.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace AppointmentTracker.Controllers
 {
     public class ServiceProviderController : Controller
     {
+        private readonly IRepository _repository;
+        private readonly ILogger<AppointmentController> _logger;
+
+        public ServiceProviderController(IRepository repository, ILogger<AppointmentController> logger)//need to pass in IRepository SpaRepository
+        {
+            _repository = repository;
+            _logger = logger;
+        }
+
         // GET: ServiceProvider
         public ActionResult Index()
         {
-            return View(ServiceProviderRepository.Providers);
+            return View(_repository.Providers);
         }
 
         // GET: ServiceProvider/Details/5
         public ActionResult Details(int id)
         {
-            return View(ServiceProviderRepository.Read(id));
+            return View(_repository.GetProvider(id));
         }
 
         // GET: ServiceProvider/Create
@@ -36,7 +46,7 @@ namespace AppointmentTracker.Controllers
         {
             try
             {
-                ServiceProviderRepository.Create(serviceProvider);
+                _repository.AddProvider(serviceProvider);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -48,7 +58,7 @@ namespace AppointmentTracker.Controllers
         // GET: Customer/Edit/5
         public ActionResult Edit(int id)
         {
-            return View(ServiceProviderRepository.Read(id));
+            return View(_repository.GetProvider(id));
         }
 
         // POST: Customer/Edit/5
@@ -58,7 +68,7 @@ namespace AppointmentTracker.Controllers
         {
             try
             {
-                ServiceProviderRepository.Update(id, serviceProvider);
+                _repository.UpdateProvider(id, serviceProvider);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -70,7 +80,7 @@ namespace AppointmentTracker.Controllers
         // GET: ServiceProvider/Delete/5
         public ActionResult Delete(int id)
         {
-            return View(ServiceProviderRepository.Read(id));
+            return View(_repository.GetProvider(id));
         }
 
         // POST: ServiceProvider/Delete/5
@@ -80,7 +90,7 @@ namespace AppointmentTracker.Controllers
         {
             try
             {
-                ServiceProviderRepository.Delete(id);
+                _repository.DeleteProvider(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

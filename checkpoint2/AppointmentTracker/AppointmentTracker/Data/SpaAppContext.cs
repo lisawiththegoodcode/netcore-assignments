@@ -7,7 +7,7 @@ using AppointmentTracker.Models;
 
 namespace AppointmentTracker.Data
 {
-    public class SpaAppContext : DbContext //TODO: add an IReadOnlySpaAppContext
+    public class SpaAppContext : DbContext, IReadOnlySpaAppContext
     {
         public SpaAppContext(DbContextOptions options) : base(options)
         {
@@ -17,20 +17,21 @@ namespace AppointmentTracker.Data
         {
             modelBuilder.Entity<AppointmentModel>().HasKey(x => x.Id).ForSqlServerIsClustered();
             modelBuilder.Entity<AppointmentModel>().Property(x => x.Id).UseSqlServerIdentityColumn();
+
             modelBuilder.Entity<CustomerModel>().HasKey(x => x.Id).ForSqlServerIsClustered();
             modelBuilder.Entity<CustomerModel>().Property(x => x.Id).UseSqlServerIdentityColumn();
+
             modelBuilder.Entity<ServiceProviderModel>().HasKey(x => x.Id).ForSqlServerIsClustered();
             modelBuilder.Entity<ServiceProviderModel>().Property(x => x.Id).UseSqlServerIdentityColumn();
 
-            //TODO: COME BACK TO THIS
-            //modelBuilder.Entity<ToDo>().HasOne(x => x.Status).WithMany(x => x.ToDos).HasForeignKey(x => x.StatusId);
-            //modelBuilder.Entity<ToDo>().HasIndex(x => x.StatusId).HasName($"IX_{nameof(ToDo)}_{nameof(ToDo.Status)}");
-            //modelBuilder.Entity<ToDo>().HasOne(x => x.Tag).WithMany(x => x.ToDos).HasForeignKey(x => x.TagId);
-            //modelBuilder.Entity<ToDo>().HasIndex(x => x.TagId).HasName($"IX_{nameof(ToDo)}_{nameof(ToDo.Tag)}");
+            modelBuilder.Entity<AppointmentModel>().HasOne(x => x.Provider).WithMany(x => x.Appointments).HasForeignKey(x => x.ProviderId);
+            modelBuilder.Entity<AppointmentModel>().HasIndex(x => x.ProviderId).HasName($"IX_{nameof(AppointmentModel)}_{nameof(AppointmentModel.Provider)}");
+            modelBuilder.Entity<AppointmentModel>().HasOne(x => x.Client).WithMany(x => x.Appointments).HasForeignKey(x => x.ClientId);
+            modelBuilder.Entity<AppointmentModel>().HasIndex(x => x.ClientId).HasName($"IX_{nameof(AppointmentModel)}_{nameof(AppointmentModel.Client)}");
 
-            //modelBuilder.Entity<Status>().HasMany(x => x.ToDos).WithOne(x => x.Status);
+            modelBuilder.Entity<ServiceProviderModel>().HasMany(x => x.Appointments).WithOne(x => x.Provider);
 
-            //modelBuilder.Entity<Tag>().HasMany(x => x.ToDos).WithOne(x => x.Tag);
+            modelBuilder.Entity<CustomerModel>().HasMany(x => x.Appointments).WithOne(x => x.Client);
         }
 
         public DbSet<AppointmentModel> Appointments { get; set; }
@@ -39,10 +40,11 @@ namespace AppointmentTracker.Data
 
         public DbSet<ServiceProviderModel> Providers { get; set; }
 
-        //TODO: Come back to this
-        //IQueryable<ToDo> IReadOnlyToDoContext.ToDos { get => ToDos.AsNoTracking(); }
+        IQueryable<AppointmentModel> IReadOnlySpaAppContext.Appointments { get => Appointments.AsNoTracking(); }
 
-        //IQueryable<Status> IReadOnlyToDoContext.Statuses { get => Statuses.AsNoTracking(); }
+        IQueryable<CustomerModel> IReadOnlySpaAppContext.Customers { get => Customers.AsNoTracking(); }
+
+        IQueryable<ServiceProviderModel> IReadOnlySpaAppContext.Providers { get => Providers.AsNoTracking(); }
 
     }
 }

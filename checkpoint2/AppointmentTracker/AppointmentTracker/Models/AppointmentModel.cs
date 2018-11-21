@@ -15,9 +15,11 @@ namespace AppointmentTracker.Models
 
         [UIHint("Client")]
         public CustomerModel Client { get; set; }
+        public int ClientId { get; set; }
 
         [UIHint("Provider")]
         public ServiceProviderModel Provider { get; set; }
+        public int ProviderId { get; set; }
 
         [Required]
         public string Service { get; set; }

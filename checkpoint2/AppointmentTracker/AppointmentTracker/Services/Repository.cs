@@ -38,9 +38,8 @@ namespace AppointmentTracker.Services
             {
                 throw new Exception("The selected customer already has an appointment booked at this time.");
             }
-            //TODO: Do I need these? If so, FIX LINES 41 and 42 after writing new methods for getting provider and client
-            //appointment.Provider = ServiceProviderRepository.Read(appointment.Provider.Id);
-            //appointment.Client = CustomerRepository.Read(appointment.Client.Id);
+            appointment.Provider = GetProvider(appointment.Provider.Id);
+            appointment.Client = GetCustomer(appointment.Client.Id);
             _spaAppContext.Appointments.Add(appointment);
             _spaAppContext.SaveChanges();
         }
@@ -56,9 +55,9 @@ namespace AppointmentTracker.Services
             {
                 throw new Exception("The selected customer already has an appointment booked at this time.");
             }
-            //TODO: Do I still need these? If so update them
-            //appointment.Provider = ServiceProviderRepository.Read(appointment.Provider.Id);
-            //appointment.Client = CustomerRepository.Read(appointment.Client.Id);
+
+            appointment.Provider = GetProvider(appointment.Provider.Id);
+            appointment.Client = GetCustomer(appointment.Client.Id);
             appointment.Id = id;
             _spaAppContext.Appointments.Update(appointment);
             _spaAppContext.SaveChanges();

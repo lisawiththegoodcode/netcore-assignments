@@ -28,8 +28,9 @@ namespace AppointmentTracker.Controllers
         }
 
         // GET: ServiceProvider/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int id, ServiceProviderModel serviceProvider)
         {
+            serviceProvider.Appointments = _repository.GetAppointmentsForProvider(id);
             return View(_repository.GetProvider(id));
         }
 

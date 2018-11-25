@@ -89,7 +89,7 @@ namespace AppointmentTracker.Services
 
             foreach (var appt in _spaAppContext.Appointments)
             {
-                if (appt.AppointmentTime == proposedAppt.AppointmentTime && appt.Provider.Id == proposedAppt.Provider.Id && appt.Id != proposedAppt.Id)
+                if (appt.AppointmentTime == proposedAppt.AppointmentTime && appt.ProviderId == proposedAppt.ProviderId && appt.Id != proposedAppt.Id)
                 {
                     return false;
                 }
@@ -103,7 +103,7 @@ namespace AppointmentTracker.Services
 
             foreach (var appt in _spaAppContext.Appointments)
             {
-                if (appt.AppointmentTime == proposedAppt.AppointmentTime && appt.Client.Id == proposedAppt.Client.Id && appt.Id != proposedAppt.Id)
+                if (appt.AppointmentTime == proposedAppt.AppointmentTime && appt.ClientId == proposedAppt.ClientId && appt.Id != proposedAppt.Id)
                 {
                     return false;
                 }

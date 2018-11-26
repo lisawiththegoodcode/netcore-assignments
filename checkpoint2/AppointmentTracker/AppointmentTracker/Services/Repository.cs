@@ -38,8 +38,8 @@ namespace AppointmentTracker.Services
             {
                 throw new Exception("The selected customer already has an appointment booked at this time.");
             }
-            appointment.Provider = GetProvider(appointment.Provider.Id);
-            appointment.Client = GetCustomer(appointment.Client.Id);
+            //appointment.Provider = GetProvider(appointment.ProviderId);
+            //appointment.Client = GetCustomer(appointment.ClientId);
             _spaAppContext.Appointments.Add(appointment);
             _spaAppContext.SaveChanges();
         }
@@ -56,8 +56,8 @@ namespace AppointmentTracker.Services
                 throw new Exception("The selected customer already has an appointment booked at this time.");
             }
 
-            appointment.Provider = GetProvider(appointment.Provider.Id);
-            appointment.Client = GetCustomer(appointment.Client.Id);
+            //appointment.Provider = GetProvider(appointment.Provider.Id);
+            //appointment.Client = GetCustomer(appointment.Client.Id);
             appointment.Id = id;
             _spaAppContext.Appointments.Update(appointment);
             _spaAppContext.SaveChanges();

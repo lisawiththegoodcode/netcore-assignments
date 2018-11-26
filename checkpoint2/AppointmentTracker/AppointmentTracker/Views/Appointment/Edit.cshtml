@@ -1,6 +1,11 @@
 ﻿@model AppointmentTracker.Models.AppointmentModel
+@inject AppointmentTracker.Services.IRepository repository
+@inject AppointmentTracker.Data.SpaAppContext dbcontext
 
 @{
+    var clientItems = repository.Customers.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+    var providerItems = repository.Providers.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+
     ViewData["Title"] = "Edit";
 }
 
@@ -23,8 +28,9 @@
             </div>
             <div class="form-group">
                 <label asp-for="Client" class="control-label"></label>
-                @Html.EditorFor(x => x.Client)
-                <span asp-validation-for="Client" class="text-danger"></span>
+                <select asp-for="ClientId" asp-items="@clientItems" class="form-control"></select>
+                @*@Html.EditorFor(x => x.ClientId)*@
+                <span asp-validation-for="ClientId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Service" class="control-label"></label>
@@ -33,8 +39,9 @@
             </div>
             <div class="form-group">
                 <label asp-for="Provider" class="control-label"></label>
-                @Html.EditorFor(x => x.Provider)
-                <span asp-validation-for="Provider" class="text-danger"></span>
+                <select asp-for="ProviderId" asp-items="@providerItems" class="form-control"></select>
+                @*@Html.EditorFor(x => x.Provider)*@
+                <span asp-validation-for="ProviderId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />

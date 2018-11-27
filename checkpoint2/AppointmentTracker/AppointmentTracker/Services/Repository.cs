@@ -58,8 +58,7 @@ namespace AppointmentTracker.Services
 
             //appointment.Provider = GetProvider(appointment.Provider.Id);
             //appointment.Client = GetCustomer(appointment.Client.Id);
-            //appointment.Id = id;
-            var editAppt = _spaAppContext.Appointments.First(x => x.Id == appointment.Id);
+            appointment.Id = id;
             _spaAppContext.Appointments.Update(appointment);
             _spaAppContext.SaveChanges();
         }
@@ -73,7 +72,7 @@ namespace AppointmentTracker.Services
 
         public AppointmentModel GetAppointment(int id)
         {
-            return _spaAppContext.Appointments
+            return _readOnlySpaAppContext.Appointments
                 .Include(x => x.Provider)
                 .Include(x => x.Client)
                 .First(SelectAppointmentById(id));

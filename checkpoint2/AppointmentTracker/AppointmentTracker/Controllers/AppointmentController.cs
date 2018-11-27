@@ -6,6 +6,7 @@ using AppointmentTracker.Models;
 using AppointmentTracker.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace AppointmentTracker.Controllers
@@ -24,7 +25,7 @@ namespace AppointmentTracker.Controllers
         // GET: Appointment
         public ActionResult Index()
         {
-            return View(_repository.Appointments);
+            return View(_repository.Appointments.Include(x => x.Provider).Include(x => x.Client));
         }
 
         // GET: Appointment/Details/5
@@ -95,7 +96,7 @@ namespace AppointmentTracker.Controllers
                 _repository.DeleteAppointment(id);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
                 return View();
             }

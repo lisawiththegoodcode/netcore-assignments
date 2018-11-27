@@ -58,21 +58,22 @@ namespace AppointmentTracker.Services
 
             //appointment.Provider = GetProvider(appointment.Provider.Id);
             //appointment.Client = GetCustomer(appointment.Client.Id);
-            appointment.Id = id;
+            //appointment.Id = id;
+            var editAppt = _spaAppContext.Appointments.First(x => x.Id == appointment.Id);
             _spaAppContext.Appointments.Update(appointment);
             _spaAppContext.SaveChanges();
         }
 
         public void DeleteAppointment(int id)
         {
-            var toBeDeleted = _spaAppContext.Appointments.Find(SelectAppointmentById(id));
+            var toBeDeleted = _spaAppContext.Appointments.First(SelectAppointmentById(id));
             _spaAppContext.Appointments.Remove(toBeDeleted);
             _spaAppContext.SaveChanges();
         }
 
         public AppointmentModel GetAppointment(int id)
         {
-            return _readOnlySpaAppContext.Appointments
+            return _spaAppContext.Appointments
                 .Include(x => x.Provider)
                 .Include(x => x.Client)
                 .First(SelectAppointmentById(id));

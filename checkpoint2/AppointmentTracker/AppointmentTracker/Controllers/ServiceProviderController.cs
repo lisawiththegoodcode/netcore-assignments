@@ -13,12 +13,10 @@ namespace AppointmentTracker.Controllers
     public class ServiceProviderController : Controller
     {
         private readonly IRepository _repository;
-        private readonly ILogger<AppointmentController> _logger;
 
-        public ServiceProviderController(IRepository repository, ILogger<AppointmentController> logger)//need to pass in IRepository SpaRepository
+        public ServiceProviderController(IRepository repository)
         {
             _repository = repository;
-            _logger = logger;
         }
 
         // GET: ServiceProvider

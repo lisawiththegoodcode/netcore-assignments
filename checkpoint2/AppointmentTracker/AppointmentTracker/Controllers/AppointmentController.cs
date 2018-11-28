@@ -14,12 +14,10 @@ namespace AppointmentTracker.Controllers
     public class AppointmentController : Controller
     {
         private readonly IRepository _repository;
-        private readonly ILogger<AppointmentController> _logger;
 
-        public AppointmentController(IRepository repository, ILogger<AppointmentController> logger)//need to pass in IRepository SpaRepository
+        public AppointmentController(IRepository repository)
         {
             _repository = repository;
-            _logger = logger;
         }
 
         // GET: Appointment
@@ -76,7 +74,7 @@ namespace AppointmentTracker.Controllers
             catch (Exception e)
             {
                 ModelState.AddModelError("", e.Message);
-                return View(AppointmentRepository.Read(id));
+                return View(_repository.GetAppointment(id));
             }
         }
 
@@ -98,6 +96,7 @@ namespace AppointmentTracker.Controllers
             }
             catch (Exception e)
             {
+                ModelState.AddModelError("", e.Message);
                 return View();
             }
         }

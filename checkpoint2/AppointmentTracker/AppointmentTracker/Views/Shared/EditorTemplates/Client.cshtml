@@ -1,4 +1,4 @@
-﻿@using AppointmentTracker.Services
+﻿@*@using AppointmentTracker.Services
 @model AppointmentTracker.Models.CustomerModel
 @inject IRepository repository
 @inject AppointmentTracker.Data.SpaAppContext dbcontext
@@ -7,4 +7,4 @@
     var items = repository.Customers.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
 }
 
-<select asp-for="Id" asp-items="@items"></select>
+<select asp-for="Id" asp-items="@items"></select>*@

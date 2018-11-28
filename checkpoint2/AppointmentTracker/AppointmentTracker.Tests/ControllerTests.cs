@@ -32,6 +32,7 @@ namespace AppointmentTracker.Tests
         [Fact]
         public void ProviderDetails_TakesAnInt_ReturnsAViewResult_WithServiceProviderModelData()
         {
+            //FETCHES A SERVICE PROVIDER WHEN GIVEN AN EXISTING ID
             //assemble
             var testServiceProviderController = new ServiceProviderController();
 

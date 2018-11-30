@@ -71,7 +71,7 @@ namespace Forum
             using (var serviceScope = scopeFactory.CreateScope())
             using (var context = serviceScope.ServiceProvider.GetService<ForumContext>())
             {
-                context.Database.EnsureCreated();
+                context.Database.Migrate();
             }
         }
     }

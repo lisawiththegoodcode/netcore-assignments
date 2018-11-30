@@ -44,9 +44,9 @@ namespace Forum.Controllers
         }
 
         // GET: Messages/Create
-        public IActionResult Create()
+        public IActionResult Create(int? ThreadId)
         {
-            return View();
+            return View(new Message { ThreadId = ThreadId??0 });
         }
 
         // POST: Messages/Create
@@ -54,13 +54,14 @@ namespace Forum.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Text,DatePosted,ThreadId")] Message message)
+        public async Task<IActionResult> Create([Bind("Text,ThreadId")] Message message)
         {
             if (ModelState.IsValid)
             {
+
                 _context.Add(message);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ThreadsController.Details), nameof(ThreadsController).Replace("Controller", ""), new { Id = message.ThreadId } );
             }
             return View(message);
         }

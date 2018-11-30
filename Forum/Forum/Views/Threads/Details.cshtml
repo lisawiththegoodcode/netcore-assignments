@@ -33,7 +33,7 @@
 
         }
     </div>
-    <a class="btn-danger" asp-controller="Messages" asp-action="Create">Reply</a>
+    <a class="btn-danger" asp-controller="Messages" asp-action="Create" asp-route-threadid="@Model.Id">Reply</a>
     @*onclick="window.location.href='../../Messages/Create'"*@
 </div>
 <div>

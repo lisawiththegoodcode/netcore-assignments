@@ -28,7 +28,7 @@ namespace AppointmentTracker.Tests
             //var message = new Message() { ThreadId = 1 }; //must be an integer, non-zero bc zero is the default
 
 
-            var testRepo = new Repository(contextMock.Object); //, icontext);
+            var testRepo = new Repository(contextMock.Object); //, need to add icontext);
             var testCustomer = new CustomerModel
             {
                 Id = 5,

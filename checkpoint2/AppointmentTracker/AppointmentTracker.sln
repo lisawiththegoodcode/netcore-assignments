@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28010.2041
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppointmentTracker", "AppointmentTracker\AppointmentTracker.csproj", "{DBF98F79-77AF-433B-BD18-4B8CC2C12BA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppointmentTracker.Tests", "AppointmentTracker.Tests\AppointmentTracker.Tests.csproj", "{5547BBA4-C860-4D5A-8835-09230D20FD82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppointmentTracker.Tests", "AppointmentTracker.Tests\AppointmentTracker.Tests.csproj", "{5547BBA4-C860-4D5A-8835-09230D20FD82}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

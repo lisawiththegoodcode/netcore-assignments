@@ -15,7 +15,9 @@ namespace AppointmentTracker.Tests
         {
             //ASSEMBLE
             //do not need to instantiate the repository because all the methods are static
-            //var testCustomerRepo = new CustomerRepository();
+
+
+            var testRepo = new Repository(null);
             var testCustomer = new CustomerModel
             {
                 Id = 5,
@@ -23,7 +25,7 @@ namespace AppointmentTracker.Tests
             };
 
             //ACT
-            CustomerRepository.Create(testCustomer);
+            Repository.(testCustomer);
 
             //ASSERT
             Assert.Contains(testCustomer, CustomerRepository.Customers);

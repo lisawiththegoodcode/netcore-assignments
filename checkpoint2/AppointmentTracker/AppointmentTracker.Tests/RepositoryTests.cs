@@ -3,7 +3,13 @@ using Xunit;
 using AppointmentTracker.Services;
 using AppointmentTracker.Models;
 using System.Linq;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using Moq;
+using AppointmentTracker.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AppointmentTracker.Tests
 {
@@ -11,13 +17,18 @@ namespace AppointmentTracker.Tests
     {
         //Customer Repository Test
         [Fact]
-        public void CreateMethod_ShouldAddNewCustomertoCustomerRepository()
+        public void CreateMethod_ShouldAddNewCustomertoRepository()
         {
             //ASSEMBLE
-            //do not need to instantiate the repository because all the methods are static
+            //previously did not need to instantiate the repository because all the methods are static, now it has a ctor that takes a context and icontext
+            var contextMock = new Mock<SpaAppContext>(new DbContextOptionsBuilder<SpaAppContext>().Options);
+            contextMock.Setup(c => c.Add(It.IsAny<AppointmentModel>())).Returns<EntityEntry<AppointmentModel>>(null);
+            contextMock.Setup(c => c.SaveChangesAsync(CancellationToken.None)).Returns(Task.FromResult(0));
+            //var controller = new MessagesController(contextMock.Object);
+            //var message = new Message() { ThreadId = 1 }; //must be an integer, non-zero bc zero is the default
 
 
-            var testRepo = new Repository(null);
+            var testRepo = new Repository(contextMock.Object); //, icontext);
             var testCustomer = new CustomerModel
             {
                 Id = 5,
@@ -25,10 +36,10 @@ namespace AppointmentTracker.Tests
             };
 
             //ACT
-            Repository.(testCustomer);
+            testRepo.AddCustomer(testCustomer);
 
             //ASSERT
-            Assert.Contains(testCustomer, CustomerRepository.Customers);
+            Assert.Contains(testCustomer, testRepo.Customers);
         }
         
         //ServiceProvider Repository Test

@@ -87,7 +87,11 @@ namespace AppointmentTracker.Services
             //NOTE: I chose to assume a provider would be free so long that two appts did not start at the same time. 
             //If I were to develop this further, services could have a defined time allotments that I would take into consideration in the provider's availability.
 
-            return !_readOnlySpaAppContext.Appointments.Any(appt => appt.AppointmentTime == proposedAppt.AppointmentTime && appt.ProviderId == proposedAppt.ProviderId && appt.Id != proposedAppt.Id);
+            return !_readOnlySpaAppContext.Appointments
+                .Any(appt => appt.AppointmentTime == proposedAppt.AppointmentTime 
+                    && appt.ProviderId == proposedAppt.ProviderId 
+                    && appt.Id != proposedAppt.Id);
+
             //foreach (var appt in _readOnlySpaAppContext.Appointments)
             //{
             //    if (appt.AppointmentTime == proposedAppt.AppointmentTime && appt.ProviderId == proposedAppt.ProviderId && appt.Id != proposedAppt.Id)

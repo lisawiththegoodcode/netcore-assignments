@@ -15,6 +15,27 @@ namespace AppointmentTracker.Tests
 {
     public class RepositoryTests
     {
+        [Fact]
+        public void IsProviderAvailableMethod_ReturnsFalseWhenAppointmentConflict()
+            
+            var testReadOnlyContext = new Mock<IReadOnlySpaAppContext> 
+            new DbContextOptionsBuilder<IReadOnlySpaAppContext>().Options);
+        contextMock.Setup(c => c.Add(It.IsAny<AppointmentModel>())).Returns<EntityEntry<AppointmentModel>>(null);
+            contextMock.Setup(c => c.SaveChangesAsync(CancellationToken.None)).Returns(Task.FromResult(0));
+
+            var testRepo = new Repository(null, testReadOnlyContext);
+        }
+
+        [Fact]
+        public void IsProviderAvailableMethod_ReturnsTrueWhenNoAppointmentConflict()
+        {
+
+        }
+
+
+
+
+
         //Customer Repository Test
         [Fact]
         public void CreateMethod_ShouldAddNewCustomertoRepository()

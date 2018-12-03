@@ -15,102 +15,114 @@ namespace AppointmentTracker.Tests
 {
     public class RepositoryTests
     {
-        [Fact]
-        public void IsProviderAvailableMethod_ReturnsFalseWhenAppointmentConflict()
-            
-            var testReadOnlyContext = new Mock<IReadOnlySpaAppContext> 
-            new DbContextOptionsBuilder<IReadOnlySpaAppContext>().Options);
-        contextMock.Setup(c => c.Add(It.IsAny<AppointmentModel>())).Returns<EntityEntry<AppointmentModel>>(null);
-            contextMock.Setup(c => c.SaveChangesAsync(CancellationToken.None)).Returns(Task.FromResult(0));
+        //HELPER METHOD THAT INSTANTIATES THE IREADONLYSPAAPPCONTEXT
+        private IReadOnlySpaAppContext CreateTestReadOnlyContext()
+        {
+            var testReadOnlyContext = new Mock<IReadOnlySpaAppContext>();
+            var testAppts = new List<AppointmentModel>
+            {
+                new AppointmentModel
+                {
+                    Id = 1,
+                    AppointmentTime = new DateTime(2018, 12, 01, 11, 00, 00),
+                    ProviderId = 1
+                }
+            };
 
-            var testRepo = new Repository(null, testReadOnlyContext);
+            testReadOnlyContext.Setup(x => x.Appointments).Returns(testAppts.AsQueryable());
+            return testReadOnlyContext.Object;
         }
 
+        //HELPER METHOD THAT INSTANTIATES THE SPAAPPCONTEXT
+        private SpaAppContext CreateSpaAppContext()
+        {
+            var testContext = new Mock<SpaAppContext>(new DbContextOptionsBuilder<SpaAppContext>().Options);
+            testContext.Setup(c => c.Add(It.IsAny<AppointmentModel>())).Returns<EntityEntry<AppointmentModel>>(null);
+            testContext.Setup(c => c.SaveChangesAsync(CancellationToken.None)).Returns(Task.FromResult(0));
+
+            return testContext.Object;
+        }
+        
+        //TESTS THE ISPROVIDERAVAILABLE() METHOD
+        [Fact]
+        public void IsProviderAvailableMethod_ReturnsFalseWhenAppointmentConflict()
+        {
+            // ARRANGE
+            var proposedAppt = new AppointmentModel
+            {
+                Id = 2,
+                AppointmentTime = new DateTime(2018, 12, 1, 11, 00, 00),
+                ProviderId = 1
+            };
+            var testRepo = new Repository(null, CreateTestReadOnlyContext());
+
+            // ACT
+            var isAvailable = testRepo.IsProviderAvailable(proposedAppt);
+
+            // ASSERT
+            Assert.False(isAvailable);
+        }
+
+        //TESTS THE ISPROVIDERAVAILABLE() METHOD
         [Fact]
         public void IsProviderAvailableMethod_ReturnsTrueWhenNoAppointmentConflict()
         {
-
-        }
-
-
-
-
-
-        //Customer Repository Test
-        [Fact]
-        public void CreateMethod_ShouldAddNewCustomertoRepository()
-        {
-            //ASSEMBLE
-            //previously did not need to instantiate the repository because all the methods are static, now it has a ctor that takes a context and icontext
-            var contextMock = new Mock<SpaAppContext>(new DbContextOptionsBuilder<SpaAppContext>().Options);
-            contextMock.Setup(c => c.Add(It.IsAny<AppointmentModel>())).Returns<EntityEntry<AppointmentModel>>(null);
-            contextMock.Setup(c => c.SaveChangesAsync(CancellationToken.None)).Returns(Task.FromResult(0));
-            //var controller = new MessagesController(contextMock.Object);
-            //var message = new Message() { ThreadId = 1 }; //must be an integer, non-zero bc zero is the default
-
-
-            var testRepo = new Repository(contextMock.Object); //, need to add icontext);
-            var testCustomer = new CustomerModel
+            // ARRANGE
+            var proposedAppt = new AppointmentModel
             {
-                Id = 5,
-                Name = "Bob"
+                Id = 2,
+                AppointmentTime = new DateTime(2018, 1, 1, 11, 00, 00),
+                ProviderId = 1
             };
+            var testRepo = new Repository(null, CreateTestReadOnlyContext());
 
-            //ACT
-            testRepo.AddCustomer(testCustomer);
+            // ACT
+            var isAvailable = testRepo.IsProviderAvailable(proposedAppt);
 
-            //ASSERT
-            Assert.Contains(testCustomer, testRepo.Customers);
-        }
-        
-        //ServiceProvider Repository Test
-        [Fact]
-        public void ReadMethod_ShouldReadProviderFromProviderRepository()
-        {
-            //ASSEMBLE
-            int testId = 1;
-
-            //ACT
-            var result = ServiceProviderRepository.Read(testId);
-
-            //ASSERT
-            Assert.NotNull(result);
+            // ASSERT
+            Assert.True(isAvailable);
         }
 
+        //TESTS THE ADDAPPOINTMENT() METHOD
         [Fact]
-        public void ReadMethod_ReturnsNullWhenItemNotFound()
+        public void AddAppointmentMethod_ThrowsNoException()
         {
-            //ASSEMBLE
-            int testId = 100;
-
-            //ACT
-            var result = ServiceProviderRepository.Read(testId);
-
-            //ASSERT
-            Assert.Null(result);
-        }
-
-
-        //Appointment Repository Test
-        [Fact]
-        public void UpdateMethod_ShouldEditAppointmentFromAppointmentRepository()
-        {
-            //ASSEMBLE
-            var testAppointment = new AppointmentModel
+            // ARRANGE
+            var newAppt = new AppointmentModel
             {
                 Id = 1,
-                AppointmentTime = new DateTime(2018, 10, 10, 08, 00, 00),
-                Client = new CustomerModel { Id = 5, Name = "Bob1" },
-                Provider = new ServiceProviderModel { Id = 5, Name = "Bob2"},
-                Service = "Test Haircut"
+                AppointmentTime = new DateTime(2018, 12, 1, 11, 00, 00),
+                ProviderId = 2
             };
+            var testRepo = new Repository(CreateSpaAppContext(), CreateTestReadOnlyContext());
 
             //ACT
-            AppointmentRepository.Update(1, testAppointment);
-            var result = AppointmentRepository.Appointments.FirstOrDefault(x => x.Id == testAppointment.Id);
-
+            try
+            {
+                testRepo.AddAppointment(newAppt);
+            }
             //ASSERT
-            Assert.Equal(testAppointment, result);
+            catch (Exception)
+            {
+                Assert.True(false, "Expect try statement to succeed and for no exception to be thrown");
+            }
+        }
+
+        //TESTS THE ADDAPPOINTMENT() METHOD
+        [Fact]
+        public void AddAppointmentMethod_ThrowsExceptionWhenProviderIsNotAvailable()
+        {
+            // ARRANGE
+            var newAppt = new AppointmentModel
+            {
+                Id = 2,
+                AppointmentTime = new DateTime(2018, 12, 1, 11, 00, 00),
+                ProviderId = 1
+            };
+            var testRepo = new Repository(CreateSpaAppContext(), CreateTestReadOnlyContext());
+
+            //ACT & ASSERT
+            Assert.Throws<System.Exception>(() => testRepo.AddAppointment(newAppt));
         }
     }
 }

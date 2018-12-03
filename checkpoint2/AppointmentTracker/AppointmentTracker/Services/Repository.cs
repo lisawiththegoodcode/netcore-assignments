@@ -38,8 +38,7 @@ namespace AppointmentTracker.Services
             {
                 throw new Exception("The selected customer already has an appointment booked at this time.");
             }
-            //appointment.Provider = GetProvider(appointment.ProviderId);
-            //appointment.Client = GetCustomer(appointment.ClientId);
+
             _spaAppContext.Appointments.Add(appointment);
             _spaAppContext.SaveChanges();
         }
@@ -56,8 +55,6 @@ namespace AppointmentTracker.Services
                 throw new Exception("The selected customer already has an appointment booked at this time.");
             }
 
-            //appointment.Provider = GetProvider(appointment.Provider.Id);
-            //appointment.Client = GetCustomer(appointment.Client.Id);
             appointment.Id = id;
             _spaAppContext.Appointments.Update(appointment);
             _spaAppContext.SaveChanges();
@@ -80,42 +77,26 @@ namespace AppointmentTracker.Services
         #endregion
 
         #region Appointment Checker Methods
-        private bool IsProviderAvailable(AppointmentModel proposedAppt)
+        public bool IsProviderAvailable(AppointmentModel proposedAppt)
         {
-            // loop thru all appointments to check if the proposed service provider is already booked for proposed start time
-
             //NOTE: I chose to assume a provider would be free so long that two appts did not start at the same time. 
             //If I were to develop this further, services could have a defined time allotments that I would take into consideration in the provider's availability.
 
             return !_readOnlySpaAppContext.Appointments
-                .Any(appt => appt.AppointmentTime == proposedAppt.AppointmentTime 
-                    && appt.ProviderId == proposedAppt.ProviderId 
+                .Any(appt => appt.AppointmentTime == proposedAppt.AppointmentTime
+                    && appt.ProviderId == proposedAppt.ProviderId
                     && appt.Id != proposedAppt.Id);
-
-            //foreach (var appt in _readOnlySpaAppContext.Appointments)
-            //{
-            //    if (appt.AppointmentTime == proposedAppt.AppointmentTime && appt.ProviderId == proposedAppt.ProviderId && appt.Id != proposedAppt.Id)
-            //    {
-            //        return false;
-            //    }
-            //}
-            //return true;
         }
 
-        private bool IsClientAvailable(AppointmentModel proposedAppt)
+        public bool IsClientAvailable(AppointmentModel proposedAppt)
         {
-            // loop thru all appointments to check if the client already has an appt booked for proposed start time
+            //NOTE: I chose to assume a client would be free so long that two appts did not start at the same time. 
+            //If I were to develop this further, services could have a defined time allotments that I would take into consideration in the provider's availability.
 
-            return !_readOnlySpaAppContext.Appointments.Any(appt => appt.AppointmentTime == proposedAppt.AppointmentTime && appt.ClientId == proposedAppt.ClientId && appt.Id != proposedAppt.Id);
-
-            //foreach (var appt in _readOnlySpaAppContext.Appointments)
-            //{
-            //    if (appt.AppointmentTime == proposedAppt.AppointmentTime && appt.ClientId == proposedAppt.ClientId && appt.Id != proposedAppt.Id)
-            //    {
-            //        return false;
-            //    }
-            //}
-            //return true;
+            return !_readOnlySpaAppContext.Appointments
+                .Any(appt => appt.AppointmentTime == proposedAppt.AppointmentTime
+                    && appt.ClientId == proposedAppt.ClientId
+                    && appt.Id != proposedAppt.Id);
         }
         #endregion
 

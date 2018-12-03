@@ -128,9 +128,10 @@ namespace AppointmentTracker.Services
 
         public List<AppointmentModel> GetAppointmentsForProvider(int providerID)
         {
-            return _spaAppContext.Appointments
-                .Where(appt => appt.Provider.Id == providerID)
+            return _readOnlySpaAppContext.Appointments
+                .Where(appt => appt.ProviderId == providerID)
                 .OrderBy(appt => appt.AppointmentTime)
+                .Include(appt => appt.Client)
                 .ToList();
         }
         #endregion

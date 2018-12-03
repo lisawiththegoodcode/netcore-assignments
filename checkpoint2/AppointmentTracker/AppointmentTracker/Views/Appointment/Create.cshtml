@@ -1,6 +1,5 @@
 ﻿@model AppointmentTracker.Models.AppointmentModel
 @inject AppointmentTracker.Services.IRepository repository
-@inject AppointmentTracker.Data.SpaAppContext dbcontext
 
 @{
     var clientItems = repository.Customers.Select(x => new SelectListItem(x.Name, x.Id.ToString()));

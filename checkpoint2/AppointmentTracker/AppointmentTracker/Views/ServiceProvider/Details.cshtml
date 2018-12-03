@@ -1,7 +1,9 @@
 ﻿@model AppointmentTracker.Models.ServiceProviderModel
-@using AppointmentTracker.Services;
+@inject  AppointmentTracker.Services.IRepository repository
+
 
 @{
+    var appts = repository.GetAppointmentsForProvider(Model.Id);
     ViewData["Title"] = "Details";
 }
 
@@ -40,14 +42,14 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.Appointments)
+            @foreach (var item in appts)
             {
                 <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.AppointmentTime)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Client)
+                        @Html.DisplayFor(modelItem => item.Client.Name)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Service)

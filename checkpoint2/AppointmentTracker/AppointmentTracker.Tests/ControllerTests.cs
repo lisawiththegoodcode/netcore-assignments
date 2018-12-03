@@ -7,17 +7,27 @@ using System.Linq;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using AppointmentTracker.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace AppointmentTracker.Tests
 {
     public class ControllerTests
     {
+        //HELPER METHOD THAT INSTANTIATES THE IREPOSITORY
+        private IRepository CreateIRepository()
+        {
+            var mockIRepo = new Mock<IRepository>();
+            return mockIRepo.Object;
+        }
+
+        //APPOINTMENT CONTROLLER TEST
         [Fact]
         public void AppointmentIndex_ReturnsAViewResult()
         {
             //ARRANGE
-            var mockIRepo = new Mock<IRepository>();
-            var testController = new AppointmentController(mockIRepo.Object);
+            var testController = new AppointmentController(CreateIRepository());
 
             //ACT
             var result = testController.Index();
@@ -25,28 +35,68 @@ namespace AppointmentTracker.Tests
             //ASSERT
             Assert.IsType<ViewResult>(result);
         }
+
+        //CUST CONTROLLER TEST
+        [Fact]
+        public void CustomerCreatePost_RedirectsToIndexPage()
+        {
+            //ARRANGE
+            var testController = new CustomerController(CreateIRepository());
+            var testCustomer = new CustomerModel();
+
+            //ACT
+            var result = testController.Create(testCustomer);
+
+            //ASSERT
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Index", redirectToActionResult.ActionName);
+        }
+
+        //CUST CONTROLLER TEST
+        [Fact]
+        public void CustomerCreateGet_ReturnsAViewResult()
+        {
+            //ARRANGE
+            var testController = new CustomerController(CreateIRepository());
+
+            //ACT
+            var result = testController.Create();
+
+            //ASSERT
+            Assert.IsType<ViewResult>(result);
+        }
+
+        //SERVICE PROVIDER CONTROLLER TEST
+        [Fact]
+        public void ServiceProviderDetails_ReturnsAViewResult()
+        {
+            //ARRANGE
+            var testController = new ServiceProviderController(CreateIRepository());
+            var testServiceProvider = new ServiceProviderModel { Id = 1 };
+
+            //ACT
+            var result = testController.Details(testServiceProvider.Id, testServiceProvider);
+
+            //ASSERT
+            Assert.IsType<ViewResult>(result);
+            Assert.Equal(1, testServiceProvider.Id);
+        }
+
+        //HomeController Test
+        [Fact]
+        public void HomeIndex_ReturnsAViewResult()
+        {
+            //assemble
+            var testHomeController = new HomeController();
+
+            //act
+            var result = testHomeController.Index();
+
+            //assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+        }
     }
 
-    //test create with two tests, one that yeilds the try and one that yields the catch
-
-    //Customer Controller Test
-    //public class ControllerTests
-    //{
-    //    [Fact]
-    //    public void CustomerIndex_ReturnsAViewResult_WithAListOfCustomers()
-    //    {
-    //        //assemble
-    //        var testCustomerController = new CustomerController();
-
-    //        //act
-    //        var result = testCustomerController.Index();
-
-    //        //assert
-    //        var viewResult = Assert.IsType<ViewResult>(result);
-    //        var model = Assert.IsAssignableFrom<IEnumerable<CustomerModel>>(
-    //            viewResult.ViewData.Model);
-    //        Assert.Equal(2, model.Count());
-    //    }
 
     //    //ServiceProviderController Test
     //    [Fact]
@@ -63,36 +113,6 @@ namespace AppointmentTracker.Tests
     //        var viewResult = Assert.IsType<ViewResult>(result);
     //        var model = Assert.IsAssignableFrom<ServiceProviderModel>(viewResult.ViewData.Model);
     //        Assert.NotNull(model.Name);
-    //    }
-
-    //    //AppointmentController Test
-    //    [Fact]
-    //    public void AppointmentCreate_TakesAnAppointmentModel_ReturnsARedirectToActionResult()
-    //    {
-    //        //assemble
-    //        var testAppointmentController = new AppointmentController();
-
-    //        //act
-    //        var result = testAppointmentController.Create(new AppointmentModel { Id = 5, AppointmentTime = new DateTime(2018, 8, 8, 10, 0, 0), Client = new CustomerModel(), Provider = new ServiceProviderModel(), Service = "Fake" });
-
-    //        //assert
-    //        var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-    //        Assert.Equal("Index", redirectToActionResult.ActionName);
-
-    //    }
-
-    //    //HomeController Test
-    //    [Fact]
-    //    public void HomeIndex_ReturnsAViewResult()
-    //    {
-    //        //assemble
-    //        var testHomeController = new HomeController();
-
-    //        //act
-    //        var result = testHomeController.Index();
-
-    //        //assert
-    //        var viewResult = Assert.IsType<ViewResult>(result);
     //    }
 
     //}

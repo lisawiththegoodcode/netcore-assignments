@@ -38,44 +38,60 @@ namespace AppointmentTracker.Tests
 
         //CUST CONTROLLER TEST
         [Fact]
-        public void CustomerCreatePost_RedirectsToIndexPage()
+        public void CustomerCreate_RedirectsToIndexPage_IfPostSuccessful()
         {
             //ARRANGE
-            var testController = new CustomerController(CreateIRepository());
             var testCustomer = new CustomerModel();
-
+            var testController = new CustomerController(CreateIRepository());
+            
             //ACT
+
             var result = testController.Create(testCustomer);
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
 
             //ASSERT
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("Index", redirectToActionResult.ActionName);
         }
 
         //CUST CONTROLLER TEST
         [Fact]
-        public void CustomerCreateGet_ReturnsAViewResult()
+        public void CustomerCreate_ReturnsAViewResult_IfExceptionThrown()
         {
             //ARRANGE
-            var testController = new CustomerController(CreateIRepository());
+            var testCustomer = new CustomerModel();
+            var mockIRepo = new Mock<IRepository>();
+            mockIRepo.Setup(c => c.AddCustomer(testCustomer)).Throws<Exception>();
+            var testController = new CustomerController(mockIRepo.Object);
 
             //ACT
-            var result = testController.Create();
+            var result = testController.Create(testCustomer);
 
             //ASSERT
             Assert.IsType<ViewResult>(result);
         }
+    
 
         //SERVICE PROVIDER CONTROLLER TEST
         [Fact]
         public void ServiceProviderDetails_ReturnsAViewResult()
         {
             //ARRANGE
-            var testController = new ServiceProviderController(CreateIRepository());
             var testServiceProvider = new ServiceProviderModel { Id = 1 };
+            var testAppts = new List<AppointmentModel>
+            {
+                new AppointmentModel
+                {
+                    Id = 1,
+                    AppointmentTime = new DateTime(2018, 12, 01, 11, 00, 00),
+                    ProviderId = 1
+                }
+            };
+            var mockIRepo = new Mock<IRepository>();
+            mockIRepo.Setup(x => x.GetAppointmentsForProvider(testServiceProvider.Id)).Returns(testAppts);
+            var testController = new ServiceProviderController(mockIRepo.Object);
 
             //ACT
-            var result = testController.Details(testServiceProvider.Id, testServiceProvider);
+            var result = testController.Details(1, testServiceProvider);
 
             //ASSERT
             Assert.IsType<ViewResult>(result);
@@ -95,25 +111,5 @@ namespace AppointmentTracker.Tests
             //assert
             var viewResult = Assert.IsType<ViewResult>(result);
         }
-    }
-
-
-    //    //ServiceProviderController Test
-    //    [Fact]
-    //    public void ProviderDetails_TakesAnInt_ReturnsAViewResult_WithServiceProviderModelData()
-    //    {
-    //        //FETCHES A SERVICE PROVIDER WHEN GIVEN AN EXISTING ID
-    //        //assemble
-    //        var testServiceProviderController = new ServiceProviderController();
-
-    //        //act
-    //        var result = testServiceProviderController.Details(1);
-
-    //        //asert
-    //        var viewResult = Assert.IsType<ViewResult>(result);
-    //        var model = Assert.IsAssignableFrom<ServiceProviderModel>(viewResult.ViewData.Model);
-    //        Assert.NotNull(model.Name);
-    //    }
-
-    //}
+    } 
 }

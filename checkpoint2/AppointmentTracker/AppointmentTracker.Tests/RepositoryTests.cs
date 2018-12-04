@@ -95,6 +95,7 @@ namespace AppointmentTracker.Tests
                 ProviderId = 2
             };
             var testRepo = new Repository(CreateSpaAppContext(), CreateTestReadOnlyContext());
+            string message = null;
 
             //ACT
             try
@@ -102,10 +103,12 @@ namespace AppointmentTracker.Tests
                 testRepo.AddAppointment(newAppt);
             }
             //ASSERT
-            catch (Exception)
+            catch (Exception e)
             {
-                Assert.True(false, "Expect try statement to succeed and for no exception to be thrown");
+                message = e.ToString();
             }
+
+            Assert.Null(message);
         }
 
         //TESTS THE ADDAPPOINTMENT() METHOD

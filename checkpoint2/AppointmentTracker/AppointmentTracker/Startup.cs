@@ -76,6 +76,7 @@ namespace AppointmentTracker
             using (var serviceScope = scopeFactory.CreateScope())
             using (var context = serviceScope.ServiceProvider.GetService<SpaAppContext>())
             {
+                context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
             }
         }
